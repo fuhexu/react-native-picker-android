@@ -146,7 +146,7 @@ export default class PickerAndroid extends Component{
 			this._move(dy > this.index * 40 ? this.index * 40 : dy);
 		}else{
 			this._move(dy < (this.index - this.state.items.length + 1) * 40 ? (this.index - this.state.items.length + 1) * 40 : dy);
-		}	
+		}
 	}
 
 	_handlePanResponderRelease(evt, gestureState){
