@@ -120,6 +120,7 @@ export default class PickerAndroid extends Component{
 			this.index = index;
 			this._onValueChange();
 		}
+		
 	}
 	//cascade mode will reset the wheel position
 	moveTo(index){
@@ -135,6 +136,8 @@ export default class PickerAndroid extends Component{
 	}
 
 	_handlePanResponderMove(evt, gestureState){
+		//this module has an issue where it expects move before release, so this flag enforces that
+		this.didUserInteract = true;
 		let dy = gestureState.dy;
 		if(this.isMoving) {
 			return;
@@ -145,13 +148,16 @@ export default class PickerAndroid extends Component{
 		}else{
 			this._move(dy < (this.index - this.state.items.length + 1) * 40 ? (this.index - this.state.items.length + 1) * 40 : dy);
 		}
+		
 	}
 
 	_handlePanResponderRelease(evt, gestureState){
-		let middleHeight = this.middleHeight;
-		this.index = middleHeight % 40 >= 20 ? Math.ceil(middleHeight / 40) : Math.floor(middleHeight / 40);
-		this._move(0);
-		this._onValueChange();
+		if (this.didUserInteract){
+			let middleHeight = this.middleHeight;
+			this.index = middleHeight % 40 >= 20 ? Math.ceil(middleHeight / 40) : Math.floor(middleHeight / 40);
+			this._move(0);
+			this._onValueChange();
+		}
 	}
 
 	componentWillMount(){
